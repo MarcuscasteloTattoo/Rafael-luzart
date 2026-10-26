@@ -10,7 +10,7 @@ Abra o `index.html` no navegador (dois cliques no arquivo).
 
 ## Publicar
 
-Funciona em qualquer hospedagem de site estático. Envie o `index.html`, o `favicon.png`, o `apple-touch-icon.png` e a pasta `assets/` juntos, mantendo a estrutura.
+Funciona em qualquer hospedagem de site estático. Envie o `index.html`, os ícones (`favicon-rafael.png`, `apple-touch-icon-rafael.png`, `favicon.png` e `apple-touch-icon.png`) e a pasta `assets/` juntos, mantendo a estrutura.
 
 - **GitHub Pages:** neste repositório, vá em Settings → Pages → *Deploy from a branch* → `main` / `(root)`.
 - **Vercel ou Netlify:** importe este repositório; não há comando de build.
@@ -46,3 +46,5 @@ As fotos do carrossel e do portfólio têm uma versão menor com `-480` no nome,
 ## Desempenho
 
 `_headers` (Netlify e Cloudflare Pages) e `vercel.json` (Vercel) mandam o navegador guardar as fotos em cache por 1 ano. Por isso, ao trocar uma foto, use um nome de arquivo novo em vez de substituir o arquivo com o mesmo nome. No GitHub Pages esses arquivos não têm efeito.
+
+O ícone do site usa os arquivos `favicon-rafael.png` e `apple-touch-icon-rafael.png`. Ao trocar o ícone, use um nome de arquivo novo e atualize as duas linhas `<link rel="icon">` e `<link rel="apple-touch-icon">` no `index.html`, porque o navegador guarda o ícone antigo por até uma semana.
