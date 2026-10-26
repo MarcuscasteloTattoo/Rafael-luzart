@@ -41,7 +41,7 @@ Ficam direto no HTML: textos do banner, do "Quem sou" e do valor médio, a nota 
 - `assets/portfolio-r*.webp`: fotos do portfólio
 - `assets/avaliacao-*.webp`: fotos enviadas pelos clientes nas avaliações
 
-As fotos do carrossel e do portfólio têm uma versão menor com `-480` no nome, e o banner e o "Quem sou" têm `banner-2-800.webp` e `quem-sou-2-720.webp`. O celular carrega a versão menor e o computador a maior. Ao trocar uma foto, troque as duas versões.
+As fotos do carrossel e do portfólio têm versões menores com `-480` e `-360` no nome, as fotos das avaliações têm uma com `-480`, e o banner e o "Quem sou" têm `banner-2-800.webp` e `quem-sou-2-720.webp`. O celular carrega a versão menor e o computador a maior. Ao trocar uma foto, troque as duas versões.
 
 ## Desempenho
 

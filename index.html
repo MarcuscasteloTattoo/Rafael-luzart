@@ -30,7 +30,7 @@ img { max-width: 100%; }
   --secondary-soft: oklch(0.975 0.006 85);
   --secondary-fg: oklch(0.2 0 0);
   --muted-fg: oklch(0.42 0 0);
-  --accent: oklch(0.56 0.105 78);
+  --accent: oklch(0.52 0.1 78);
   --gold: oklch(0.78 0.12 85);
   --border: oklch(0.88 0.02 85);
   --destructive: oklch(0.577 0.245 27.325);
@@ -341,7 +341,7 @@ footer .small-muted { font-size: .68rem; }
   <section class="band-card">
     <div class="wrap section">
       <h2 class="h2" style="margin-bottom:2.5rem" data-t="projetos">Projetos recentes</h2>
-      <div id="styles" aria-label="Projetos recentes" data-ta="aria-label:projetos">
+      <div id="styles" role="region" aria-label="Projetos recentes" data-ta="aria-label:projetos">
         <div class="styles-viewport" id="styles-viewport"><div class="styles-track" id="styles-track"></div></div>
         <div class="ctrls">
           <button type="button" class="ctrl" id="styles-prev" aria-label="Projeto anterior" data-ta="aria-label:projAnt"><svg><use href="#i-left"/></svg></button>
@@ -384,7 +384,7 @@ footer .small-muted { font-size: .68rem; }
         <p class="lead" style="max-width:none" data-t="avLead">Veja o que os clientes contam depois de tatuar com o Rafael no Luzart Tattoo.</p>
       </div>
       <div id="reviews-box">
-        <div class="reviews" id="reviews" aria-label="Avaliações de clientes" data-ta="aria-label:avAria"></div>
+        <div class="reviews" id="reviews" role="region" aria-label="Avaliações de clientes" data-ta="aria-label:avAria"></div>
         <div class="ctrls" style="margin-top:1rem">
           <button type="button" class="ctrl" id="rev-prev" aria-label="Avaliação anterior" data-ta="aria-label:avAnt"><svg><use href="#i-left"/></svg></button>
           <button type="button" class="ctrl" id="rev-next" aria-label="Próxima avaliação" data-ta="aria-label:avProx"><svg><use href="#i-right"/></svg></button>
@@ -502,7 +502,7 @@ function placeholder(motivo, label) {
 /* fotos em assets/ têm uma versão menor (-480) para telas pequenas */
 function srcset(src, sizes) {
   if (!sizes || !/^assets\/(portfolio|estilo)-[\w-]+\.webp$/.test(src)) return "";
-  return ` srcset="${src.replace(/\.webp$/, "-480.webp")} 480w, ${src} 900w" sizes="${sizes}"`;
+  return ` srcset="${src.replace(/\.webp$/, "-360.webp")} 360w, ${src.replace(/\.webp$/, "-480.webp")} 480w, ${src} 900w" sizes="${sizes}"`;
 }
 function media(src, alt, motivo, lazy = true, sizes = "") {
   return src ? `<span class="ph"><img src="${esc(src)}"${srcset(src, sizes)} alt="${esc(alt)}" ${lazy ? 'loading="lazy"' : ""} decoding="async" draggable="false"></span>` : placeholder(motivo, alt);
@@ -524,9 +524,9 @@ renderMarquee();
   const copy = track.firstElementChild;
   const st = { paused: false, pos: 0, target: null, drag: null, moved: 0 };
   /* largura medida só quando muda e animação parada fora da tela: evita reflow a cada quadro */
-  let copyW = copy.offsetWidth, visivel = true;
-  if (window.ResizeObserver) new ResizeObserver(() => { copyW = copy.offsetWidth; }).observe(copy);
-  else window.addEventListener("resize", () => { copyW = copy.offsetWidth; });
+  let copyW = 0, visivel = true;
+  if (window.ResizeObserver) new ResizeObserver((en) => { copyW = en[0].borderBoxSize ? en[0].borderBoxSize[0].inlineSize : copy.offsetWidth; }).observe(copy);
+  else { requestAnimationFrame(() => { copyW = copy.offsetWidth; }); window.addEventListener("resize", () => { copyW = copy.offsetWidth; }); }
   if (window.IntersectionObserver) new IntersectionObserver((en) => { visivel = en[0].isIntersecting; }, { rootMargin: "100px" }).observe(viewport);
   let last = performance.now();
   function tick(ts) {
@@ -571,7 +571,7 @@ renderMarquee();
 /* Portfólio + lightbox */
 (function () {
   const grid = $("portfolio-grid");
-  grid.innerHTML = site.portfolio.map((f, i) => `<button type="button" class="pf-item" data-i="${i}" aria-label="Ampliar: ${esc(f.alt)}">${media(f.src, f.alt, f.motivo, true, "(min-width: 768px) 23rem, 50vw")}</button>`).join("");
+  grid.innerHTML = site.portfolio.map((f, i) => `<button type="button" class="pf-item" data-i="${i}" aria-label="Ampliar: ${esc(f.alt)}">${media(f.src, f.alt, f.motivo, true, "(min-width: 768px) 23rem, calc(50vw - 30px)")}</button>`).join("");
   const lb = $("lightbox");
   let cur = null, opener = null;
   const n = site.portfolio.length;
@@ -615,7 +615,7 @@ renderMarquee();
   const ordenadas = [...site.avaliacoes].sort((x, y) => (y.foto ? 1 : 0) - (x.foto ? 1 : 0));
   box.innerHTML = ordenadas.map((a) => {
     const ini = a.nome.split(" ").slice(0, 2).map((p) => p[0]).join("");
-    return `<article class="review" data-i="${site.avaliacoes.indexOf(a)}"><div class="review-head"><div class="avatar" aria-hidden="true">${ini}</div><div style="min-width:0"><h3>${esc(a.nome)}</h3><time>${a.tempo}</time></div><span class="g-badge" role="img" aria-label="Avaliação do Google">${g}</span></div><div class="stars" role="img" aria-label="5 de 5 estrelas">${stars}</div><p>${esc(a.texto).replace(/\n/g, "<br>")}</p>${a.foto ? `<button type="button" class="review-photo-btn" data-src="${esc(a.foto)}" data-alt="${esc(a.fotoAlt || "")}" aria-label="Ampliar foto: ${esc(a.fotoAlt || "tatuagem")}"><img class="review-photo" src="${esc(a.foto)}" alt="${esc(a.fotoAlt || "")}" loading="lazy" decoding="async" draggable="false"></button>` : ""}</article>`;
+    return `<article class="review" data-i="${site.avaliacoes.indexOf(a)}"><div class="review-head"><div class="avatar" aria-hidden="true">${ini}</div><div style="min-width:0"><h3>${esc(a.nome)}</h3><time>${a.tempo}</time></div><span class="g-badge" role="img" aria-label="Avaliação do Google">${g}</span></div><div class="stars" role="img" aria-label="5 de 5 estrelas">${stars}</div><p>${esc(a.texto).replace(/\n/g, "<br>")}</p>${a.foto ? `<button type="button" class="review-photo-btn" data-src="${esc(a.foto)}" data-alt="${esc(a.fotoAlt || "")}" aria-label="Ampliar foto: ${esc(a.fotoAlt || "tatuagem")}"><img class="review-photo" src="${esc(a.foto)}" srcset="${esc(a.foto.replace(/\.webp$/, "-480.webp"))} 480w, ${esc(a.foto)} 680w" sizes="(min-width: 1024px) 20rem, (min-width: 640px) calc(50vw - 5rem), calc(86vw - 5.5rem)" alt="${esc(a.fotoAlt || "")}" loading="lazy" decoding="async" draggable="false"></button>` : ""}</article>`;
   }).join("");
   box.addEventListener("click", (e) => { const b = e.target.closest(".review-photo-btn"); if (b) window.abrirFotoUnica(b.dataset.src, b.dataset.alt, b); });
   let paused = false;
