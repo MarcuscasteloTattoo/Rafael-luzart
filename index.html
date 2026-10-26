@@ -428,9 +428,8 @@ footer .small-muted { font-size: .68rem; }
 </div>
 
 <script>
-/* CONFIGURAÇÃO — mesma estrutura do site-config.ts original.
-   As fotos das tatuagens ficavam no servidor do Lovable e não vieram no zip:
-   preencha "imagem"/"src" com a URL (ou data:URI) de cada foto. Vazio = espaço reservado. */
+/* CONFIGURAÇÃO — conteúdo do site do Rafael Luzart que muda com frequência.
+   Fotos ficam em assets/; veja o README para trocar ou acrescentar. */
 const site = {
   whatsappBase: "https://wa.me/5548988052002",
   mensagemWhatsApp: "Olá, vim pelo site do Rafael e quero fazer minha tatuagem!",
@@ -475,10 +474,6 @@ const site = {
     {nome: "Everton Roberto Dos Santos", tempo: "há 6 meses", texto: "Parabéns irmão pelo profissionalismo, sucesso sempre p vc nota 10", foto: "assets/avaliacao-everton-2.webp", fotoAlt: "Retratos realistas de três crianças no peito, ao lado da foto de referência, enviados pelo cliente na avaliação"},
     {nome: "Franklin Marcos Carneiro", tempo: "há 6 meses", texto: "Rafael um grande profissional, local super aconchegante. Tudo muito bem higiênico e seguro. Localização super boa."},
   ],
-  investimentos: ["Até R$ 300", "De R$ 300 a R$ 600", "De R$ 600 a R$ 1.000", "De R$ 1.000 a R$ 1.500", "Acima de R$ 1.500"],
-  locais: ["Braço", "Antebraço", "Perna", "Costas", "Peito", "Barriga", "Outros"],
-  estilosForm: ["Fineline | Concept tattoo", "Florais e botânicas", "Pets", "Delicadas", "Outros"],
-  tamanhos: ["Abaixo de 5 cm", "De 5 a 10 cm", "De 10 a 15 cm", "De 15 a 20 cm", "Acima de 20 cm"],
 };
 
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
