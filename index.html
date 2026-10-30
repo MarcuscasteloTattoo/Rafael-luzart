@@ -167,8 +167,6 @@ button { font: inherit; }
 .pf-item { padding: 0; border: 0; background: none; border-radius: .75rem; overflow: hidden; cursor: zoom-in; display: block; }
 .pf-item .ph { border-radius: .75rem; transition: transform .3s ease; }
 .pf-item:hover .ph { transform: scale(1.04); }
-/* primeira foto do portfólio (Salvador Dalí): zoom na tatuagem */
-#portfolio-grid .pf-item:first-child img { transform: scale(1.6); transform-origin: 50% 47%; }
 .center { margin-top: 2.5rem; display: flex; justify-content: center; }
 
 
@@ -462,20 +460,21 @@ const site = {
     { titulo: "Hórus", texto: "Ombro e braço com Hórus, o deus egípcio com cabeça de falcão, em preto e cinza.", imagem: "assets/estilo-rafael-05.webp", alt: "Tatuagem realista de Hórus, deus egípcio com cabeça de falcão, adornos e fumaça no ombro e braço" },
   ],
   portfolio: [
-    /* trabalhos do Rafael (Salvador Dalí em primeiro) */
-    { src: "assets/portfolio-r01.webp", alt: "Retrato realista de Salvador Dalí na panturrilha" },
+    /* trabalhos do Rafael (Salvador Dalí em primeiro).
+       zoom: [escala, centro x, centro y] aproxima a miniatura da tatuagem; a foto ampliada abre inteira. */
+    { src: "assets/portfolio-r01.webp", alt: "Retrato realista de Salvador Dalí na panturrilha", zoom: [1.8, 0.51, 0.47] },
     { src: "assets/portfolio-r02.webp", alt: "Leão realista com vitral gótico e ornamentos barrocos no antebraço" },
     { src: "assets/portfolio-r03.webp", alt: "Samurai com elmo e katana em realismo no antebraço" },
-    { src: "assets/portfolio-r04.webp", alt: "Mãos em oração com terço, raios de luz e bússola no antebraço" },
+    { src: "assets/portfolio-r04.webp", alt: "Mãos em oração com terço, raios de luz e bússola no antebraço", zoom: [1.35, 0.57, 0.47] },
     { src: "assets/portfolio-r05.webp", alt: "Caveira realista com a frase Amor fati, âncora e fuzis no antebraço" },
     { src: "assets/portfolio-r06.webp", alt: "Retratos realistas de três crianças no peito, ao lado da foto de referência" },
     { src: "assets/portfolio-r07.webp", alt: "Retrato realista de mulher na barriga, ao lado da foto de referência" },
-    { src: "assets/portfolio-r08.webp", alt: "Tigre rugindo em realismo no antebraço" },
+    { src: "assets/portfolio-r08.webp", alt: "Tigre rugindo em realismo no antebraço", zoom: [1.3, 0.55, 0.5] },
     { src: "assets/portfolio-r09.webp", alt: "Lobo rosnando com pinheiros e montanhas no braço" },
     { src: "assets/portfolio-r10.webp", alt: "Rosto de Jesus com coroa de espinhos e raios de luz no braço" },
     { src: "assets/portfolio-r11.webp", alt: "Anjo encapuzado com espada sobre caveiras no antebraço" },
-    { src: "assets/portfolio-r12.webp", alt: "Nossa Senhora coroada em oração no antebraço" },
-    { src: "assets/portfolio-r13.webp", alt: "Mulher com véu e hieróglifos na testa no antebraço" },
+    { src: "assets/portfolio-r12.webp", alt: "Nossa Senhora coroada em oração no antebraço", zoom: [1.25, 0.52, 0.47] },
+    { src: "assets/portfolio-r13.webp", alt: "Mulher com véu e hieróglifos na testa no antebraço", zoom: [1.5, 0.55, 0.47] },
     { src: "assets/portfolio-r14.webp", alt: "Guerreira ninja com katana e armadura no antebraço" },
   ],
   /* Avaliações do Google do Luzart Tattoo: { nome: "", tempo: "", texto: "" }, da mais recente para a mais antiga.
@@ -591,6 +590,15 @@ renderMarquee();
 (function () {
   const grid = $("portfolio-grid");
   grid.innerHTML = site.portfolio.map((f, i) => `<button type="button" class="pf-item" data-i="${i}" aria-label="Ampliar: ${esc(f.alt)}">${media(f.src, f.alt, f.motivo, true, "(min-width: 768px) 23rem, calc(50vw - 30px)")}</button>`).join("");
+  /* zoom na miniatura: centraliza a tatuagem sem deixar bordas vazias */
+  grid.querySelectorAll(".pf-item").forEach((b) => {
+    const f = site.portfolio[+b.dataset.i], img = b.querySelector("img");
+    if (!f.zoom || !img) return;
+    const [esc_, cx, cy] = f.zoom;
+    const origem = (c) => Math.min(100, Math.max(0, (0.5 - c * esc_) / (1 - esc_) * 100)).toFixed(1);
+    img.style.transform = `scale(${esc_})`;
+    img.style.transformOrigin = `${origem(cx)}% ${origem(cy)}%`;
+  });
   const lb = $("lightbox");
   let cur = null, opener = null;
   const n = site.portfolio.length;
